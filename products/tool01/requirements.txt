@@ -1,0 +1,12 @@
+# Tool01 Demo Python dependencies
+# Online/Claude Code Remote validation: LibreOffice is an OS package, not pip.
+
+openpyxl>=3.1
+python-pptx>=1.0
+pypdf>=5.0
+
+# Windows PowerPoint COM compatibility adapter only
+pywin32>=306 ; sys_platform == "win32"
+
+# tests
+pytest>=7.0
