@@ -1,7 +1,7 @@
 # Tool01 Demo 테스트 리포트 — Online-only Baseline
 
 날짜: 2026-08-20
-현재 구현 상태: `PARTIAL — GitHub Cloud Acceptance Re-run Pending`
+현재 구현 상태: `IMPLEMENTATION COMPLETE — ONLINE VALIDATION DEMO (Candidate, GPT 최종 승인 전)`
 
 이 문서는 **현재 Validation Demo의 Blocking QA**만 기록한다. 사용자는 로컬 Windows PC에서 테스트하지 않는다.
 
@@ -32,9 +32,9 @@ cd products/tool01
 TOOL01_RENDERER=libreoffice python -m pytest tests/ -q -m "not live_renderer"
 ```
 
-GPT 온라인 검수환경에서 확인된 Baseline:
+GitHub Actions `Tool01 Cloud Acceptance` Workflow에서 확인된 Baseline (2026-08-20, Run #1/#2 `completed / success`):
 
-- Headless: **37 passed / 4 skipped**
+- Headless: **38 passed / 3 skipped / 3 deselected**
 - Xvfb GUI-only: **3 passed**
 
 실 LibreOffice를 직접 기동하는 pytest 3건은 `live_renderer` marker로 Regression Gate에서 제외한다. 실제 Renderer 검증은 바로 뒤의 Cloud Acceptance O03에서 수행한다. 이 분리는 Office 하위 프로세스가 pytest/Xvfb 종료를 지연시키는 CI 불안정성을 피하기 위한 것이다.
@@ -80,14 +80,14 @@ TOOL01_RENDERER=libreoffice python scripts/cloud_acceptance.py \
 | O08 | Automation 중복 방지 | PASS — GUI regression |
 | O09 | 성능 관찰 | PASS(관찰) — 대표 5건 처리시간 기록, non-blocking |
 
-GPT 검수환경의 이전 관찰값:
+GitHub Actions 실행 결과값 (2026-08-20, Run #2):
 
 - 실제 LibreOffice PDF: **5/5**
 - 100행 personalized PPTX dry-run: **100/100**
-- 대표 5건 실제 PDF 처리시간: 약 **11.90초**
+- 대표 5건 실제 PDF 처리시간: 약 **2.88초** (관찰값, non-blocking)
 - 한글 내용/파일명: PASS
 
-이 수치는 GitHub Actions에서 다시 실행하여 재확인해야 한다. GitHub Actions 결과를 통과하기 전에는 Online Validation Demo를 최종 완료로 판정하지 않는다.
+GitHub Actions에서 동일 Gate를 재실행하여 위 수치를 확인했다. Artifact(`tool01-cloud-acceptance`)에서 `cloud_preview.png`를 직접 열어 레이아웃/한글 출력을 온라인으로 확인했다 (Visual QA PASS).
 
 ## 4. GitHub Actions Gate
 
@@ -104,6 +104,15 @@ Workflow는 다음을 수행한다.
 5. pytest Regression
 6. 실제 Cloud Acceptance O01~O09
 7. 성공/실패 여부와 관계없이 실행 로그 및 생성 Artifact 업로드
+
+실행 결과 (2026-08-20):
+
+| Run | Trigger | Conclusion | 링크 |
+|---|---|---|---|
+| #1 | push | success | https://github.com/guswns9932-pixel/makemoney2/actions/runs/32324342906 |
+| #2 | pull_request | success | https://github.com/guswns9932-pixel/makemoney2/actions/runs/32324360773 |
+
+Branch: `claude/tool01-cloud-acceptance-gate-a2fsco` / Commit: `6a3c4908eada3125ed03caaae65f82038e0cfa01` / PR: `#1` (Draft)
 
 기대 Artifact:
 
@@ -144,16 +153,18 @@ Repository에 온라인 검수용 Sample Output을 포함한다.
 
 ## 7. 현재 완료 판단
 
-현재 단계에서 `IMPLEMENTATION COMPLETE — ONLINE VALIDATION DEMO` 후보가 되려면 다음이 모두 필요하다.
+현재 단계에서 `IMPLEMENTATION COMPLETE — ONLINE VALIDATION DEMO` 후보가 되기 위한 조건:
 
-- [ ] GitHub Actions `Tool01 Cloud Acceptance` 성공
-- [ ] Regression unexpected FAIL 없음
-- [ ] O01~O09 PASS
-- [ ] GitHub Artifact 생성 확인
-- [ ] `cloud_preview.png` 또는 PDF 온라인 품질 확인
-- [ ] Claude가 결과 문서와 `PROJECT_STATE.md` 갱신
+- [x] GitHub Actions `Tool01 Cloud Acceptance` 성공 (Run #1/#2 `completed / success`)
+- [x] Regression unexpected FAIL 없음
+- [x] O01~O09 PASS
+- [x] GitHub Artifact 생성 확인 (`tool01-cloud-acceptance`, 2.65MB)
+- [x] `cloud_preview.png` 온라인 품질 확인 (레이아웃/Placeholder/한글 정상, PASS)
+- [x] Claude가 결과 문서와 `PROJECT_STATE.md` 갱신
 - [ ] GPT 최종 검수
 
-그 전까지 상태는:
+현재 상태:
 
-`PARTIAL — GitHub Cloud Acceptance Re-run Pending`
+`IMPLEMENTATION COMPLETE — ONLINE VALIDATION DEMO (Candidate, GPT 최종 승인 전)`
+
+Windows + PowerPoint COM 실기 검증: `Compatibility Pending — 향후 유료 Pilot 또는 온라인 Windows 환경에서 검증` (현재 Blocking Gate 아님)
