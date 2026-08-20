@@ -184,9 +184,13 @@ def run(output_dir: Path) -> dict:
     first_pdf = pdfs[0]
     _assert(any(ord(ch) > 127 for ch in first_pdf.name), "O05 한글 출력 파일명이 아님")
     extracted = _pdf_text(first_pdf)
+    # pypdf's glyph-position heuristic occasionally inserts stray spaces (e.g.
+    # "CERT -2026-001") that are not present in the actual rendered PDF (verified
+    # against `pdftotext -layout`), so compare with whitespace normalized away.
+    normalized_extracted = "".join(extracted.split())
     first_row = preflight.rows[0]
     expected_values = [str(first_row[k]) for k in ("수료번호", "이름", "과정명", "수료일", "기관명")]
-    missing = [value for value in expected_values if value not in extracted]
+    missing = [value for value in expected_values if "".join(value.split()) not in normalized_extracted]
     _assert(not missing, f"O05 PDF 텍스트에서 값 누락: {missing}; 추출={extracted[:300]!r}")
     tests["O05"] = {"status": "PASS", "detail": "한글 파일명 + PDF 텍스트 5개 필드 확인"}
 
