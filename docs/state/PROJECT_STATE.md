@@ -7,8 +7,8 @@
 - 프로젝트: Make Money — Office Automation Tool Business
 - 현재 제품: Tool01 — 수료증·상장·확인서·증명서 대량생성
 - 사업 판정: GO
-- 구현 상태: `PARTIAL — GitHub Cloud Acceptance Re-run Pending`
-- 현재 단계: Validation Demo — Online-only QA 전환 완료 / GitHub Actions 재검증 직전
+- 구현 상태: `IMPLEMENTATION COMPLETE — ONLINE VALIDATION DEMO (Candidate, GPT 최종 승인 전)`
+- 현재 단계: Validation Demo — GitHub Cloud Acceptance Gate 통과, GPT 최종 검수 대기
 - 날짜: 2026-08-20
 
 ## 사용자 작업 제약 — 최우선
@@ -104,35 +104,38 @@ Renderer 선택:
 7. Sample Asset: `sample_roster.xlsx`, `certificate_template.pptx`
 8. Sample Output: `assets/sample_output/cloud_preview.pdf`, `cloud_preview.png`
 
-## 현재 검증 Baseline
+## 현재 검증 Baseline — GitHub Actions 재검증 완료
 
-GPT 수정환경에서 Online Acceptance 경로를 실제 실행해 다음을 확인했다.
+2026-08-20, GitHub Actions `Tool01 Cloud Acceptance` Workflow (Run #1 push / Run #2 pull_request, 모두 `completed / success`)에서 Online Acceptance 경로를 실제 실행해 다음을 확인했다.
 
-- Python headless Regression: **37 passed / 4 skipped**
+- Python headless Regression: **38 passed / 3 skipped / 3 deselected**
 - Xvfb GUI-only Regression: **3 passed**
 - LibreOffice 실제 PDF 대표 Batch: **5/5 성공**
 - Sample 100행 personalization PPTX Dry-run: **100/100 성공**
 - 한글 출력 파일명: 확인
 - 실제 PDF 내 한글 5개 필드: 확인
-- 대표 5건 처리시간: 약 **11.90초** (관찰값, non-blocking)
-- Cloud Preview PDF/PNG 생성: 확인
+- 대표 5건 처리시간: 약 **2.88초** (관찰값, non-blocking)
+- Cloud Preview PDF/PNG 생성 및 Online Visual QA: PASS
 
-이 결과는 GitHub Actions 업로드 후 동일 Workflow로 재검증해야 한다.
+Workflow: `.github/workflows/tool01-cloud-acceptance.yml` (기존에 문서에는 존재한다고 기록되어 있었으나 Repository에 실제로는 없어 이번 작업에서 추가함)
+Branch: `claude/tool01-cloud-acceptance-gate-a2fsco` / Commit: `6a3c4908eada3125ed03caaae65f82038e0cfa01` / PR: `#1` (Draft, main merge 안 함)
+Run #1: https://github.com/guswns9932-pixel/makemoney2/actions/runs/32324342906
+Run #2: https://github.com/guswns9932-pixel/makemoney2/actions/runs/32324360773
 
-## 현재 Blocking Gate
+## 현재 Blocking Gate — 완료
 
-GitHub에 Repository를 업로드한 뒤:
+1. `Tool01 Cloud Acceptance` GitHub Actions 실행 — 완료 (success)
+2. Regression Test 통과 — 완료
+3. Cloud Acceptance O01~O09 통과 — 완료 (전체 PASS)
+4. Artifact의 `cloud_preview.png`를 온라인에서 확인 — 완료 (레이아웃/Placeholder/한글 정상)
+5. Claude가 결과문서/PROJECT_STATE를 갱신 — 완료
+6. GPT 검수 — 대기 중
 
-1. `Tool01 Cloud Acceptance` GitHub Actions 실행
-2. Regression Test 통과
-3. Cloud Acceptance O01~O09 통과
-4. Artifact의 `cloud_preview.png` 또는 PDF를 온라인에서 확인
-5. Claude가 결과문서/PROJECT_STATE를 갱신
-6. GPT 검수
-
-위 조건이 충족되면 현재 Validation Demo는 `IMPLEMENTATION COMPLETE — ONLINE VALIDATION DEMO` 후보가 된다.
+위 1~5가 충족되어 현재 Validation Demo는 `IMPLEMENTATION COMPLETE — ONLINE VALIDATION DEMO` 후보(Candidate)다. GPT 최종 승인 전까지 이는 Candidate 상태이며 최종 완료로 간주하지 않는다.
 
 ## Windows Compatibility 상태
+
+`Compatibility Pending — 향후 유료 Pilot 또는 온라인 Windows 환경에서 검증`
 
 아래는 **호환성 미검증 / 현재 non-blocking**이다.
 
@@ -147,16 +150,16 @@ GitHub에 Repository를 업로드한 뒤:
 
 ## 다음 작업
 
-신규 기능 개발보다 먼저 GitHub 온라인 Gate를 완료한다.
+GitHub 온라인 Gate(1~7)는 완료됐다. 남은 것은 GPT 최종 검수뿐이다.
 
-1. GitHub 업로드
-2. Claude Code Remote에서 문서 정합성 확인
-3. Headless Regression 실행
-4. GitHub Actions Cloud Acceptance 실행/결과 확인
-5. 실패 시 Brief/Spec 범위 안 Blocking Bug만 수정
-6. `cloud_acceptance_test.md`, `test_report.md`, `PROJECT_STATE.md` 갱신
-7. `docs/results/`에 `[CLAUDE RESULT]` 저장
-8. GPT 검수
+1. ~~GitHub 업로드~~ — 완료
+2. ~~Claude Code Remote에서 문서 정합성 확인~~ — 완료
+3. ~~Headless Regression 실행~~ — 완료 (38 passed / 3 skipped)
+4. ~~GitHub Actions Cloud Acceptance 실행/결과 확인~~ — 완료 (Run #1/#2 success)
+5. ~~실패 시 Brief/Spec 범위 안 Blocking Bug만 수정~~ — 완료 (누락된 workflow 파일 추가, O05 pypdf 추출 오탐 수정)
+6. ~~`cloud_acceptance_test.md`, `test_report.md`, `PROJECT_STATE.md` 갱신~~ — 완료
+7. ~~`docs/results/`에 `[CLAUDE RESULT]` 저장~~ — 완료
+8. GPT 검수 — 대기 중
 
 사용자에게 로컬 명령 실행을 요청하지 않는다.
 

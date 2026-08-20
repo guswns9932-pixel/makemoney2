@@ -10,9 +10,9 @@ Excel/CSV 명단과 PowerPoint Template을 이용해 이름, 수료번호, 과�
 
 ## 현재 단계
 
-**Validation Demo — Online-only Cloud Acceptance 준비 완료**
+**Validation Demo — Online-only Cloud Acceptance Gate 통과 (GPT 최종 승인 전 Candidate)**
 
-현재 Repository는 사용자가 로컬 Windows PC를 쓰지 않아도 Claude Code Remote/GitHub에서 구현·검수할 수 있도록 구성되어 있다.
+현재 Repository는 사용자가 로컬 Windows PC를 쓰지 않아도 Claude Code Remote/GitHub에서 구현·검수할 수 있도록 구성되어 있으며, GitHub Actions `Tool01 Cloud Acceptance` Workflow가 실제로 실행되어 `success`로 완료됐다.
 
 현재 상태는 `docs/state/PROJECT_STATE.md`를 기준으로 한다.
 
@@ -51,20 +51,23 @@ TOOL01_RENDERER=libreoffice python -m pytest tests/ -q
 TOOL01_RENDERER=libreoffice python scripts/cloud_acceptance.py --output artifacts/cloud_acceptance
 ```
 
-현재 GPT 검수환경 Baseline:
+GitHub Actions Baseline (2026-08-20, Run #1/#2 `completed / success`):
 
-- headless Regression: **37 passed / 4 skipped**
+- headless Regression: **38 passed / 3 skipped / 3 deselected**
 - Xvfb GUI-only Regression: **3 passed**
 - 실제 LibreOffice PDF 대표 Batch: **5/5 성공**
 - 100행 personalized PPTX Dry-run: **100/100 성공**
-- 대표 5건: **11.90초** 관찰값
+- 대표 5건: **2.88초** 관찰값 (non-blocking)
 - 실제 한글 PDF/파일명: PASS
-
-GitHub 업로드 후 Actions에서 동일 Gate를 재실행한다.
+- Online Visual QA (`cloud_preview.png`): PASS
 
 ## GitHub Actions
 
 `.github/workflows/tool01-cloud-acceptance.yml`
+
+- Run #1 (push): https://github.com/guswns9932-pixel/makemoney2/actions/runs/32324342906
+- Run #2 (pull_request): https://github.com/guswns9932-pixel/makemoney2/actions/runs/32324360773
+- PR: `#1` (Draft) / Branch: `claude/tool01-cloud-acceptance-gate-a2fsco`
 
 성공 시 Artifact:
 

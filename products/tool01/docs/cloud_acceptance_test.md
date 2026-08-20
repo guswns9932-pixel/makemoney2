@@ -61,14 +61,25 @@ Cloud Acceptance 성공 시 다음을 생성한다.
 GitHub Actions에서는 위 폴더를 Artifact로 업로드한다.
 사용자는 브라우저에서 `cloud_preview.png`/PDF를 확인할 수 있으며 로컬 실행은 필요 없다.
 
-## 현재 Baseline 실행 결과
+## 현재 Baseline 실행 결과 — GitHub Actions 재검증 완료
 
-2026-08-20 GPT 검수환경에서:
+2026-08-20, GitHub Actions `Tool01 Cloud Acceptance` Workflow (Run #1 push / Run #2 pull_request, 모두 `completed / success`)에서:
 
 - O01~O09: PASS
 - 실제 LibreOffice PDF: 5/5
 - 100행 personalization dry-run: 100/100
-- 대표 5건 처리시간: 11.90초
+- 대표 5건 처리시간: 2.88초 (Run #2 관찰값, non-blocking)
 - 한글 PDF 내용/파일명: PASS
+- Logical Regression: 38 passed / 3 skipped / 3 deselected
+- Xvfb GUI Regression: 3 passed
 
-GitHub 업로드 후 Actions에서 동일 결과를 다시 확인해야 최종 Online Demo Gate 완료 후보가 된다.
+Workflow: `.github/workflows/tool01-cloud-acceptance.yml`
+Branch: `claude/tool01-cloud-acceptance-gate-a2fsco`
+PR: `#1` (Draft)
+Commit: `6a3c4908eada3125ed03caaae65f82038e0cfa01`
+Run #1 (push): https://github.com/guswns9932-pixel/makemoney2/actions/runs/32324342906
+Run #2 (pull_request): https://github.com/guswns9932-pixel/makemoney2/actions/runs/32324360773
+
+Artifact `tool01-cloud-acceptance`에서 `cloud_preview.png`/PDF, 실제 Batch PDF 5개, 100행 personalized PPTX dry-run, `cloud_acceptance_report.md/json`, 각 로그를 다운로드해 온라인으로 확인했다. GitHub Cloud Acceptance Gate는 완료됐다.
+
+Windows + PowerPoint COM 실기는 `호환성 미검증: 향후 유료 Pilot/온라인 Windows 환경에서 확인`으로 별도 유지한다 (현재 Blocking Gate 아님).
